@@ -15,6 +15,6 @@
 
 服务器：阿里云ECS
 
-线上地址：http://www.shadowingszy.top:8080/TrainTickets/login
+线上地址：http://www.shadowingszy.top/TrainTickets/login
 
 其中名为“TrainTickets”的文件夹是项目源文件，名为“SQL”的文件夹内的文件是数据库的表结构，可直接导入MySQL workbench。
