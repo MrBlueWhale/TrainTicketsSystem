@@ -1,23 +1,39 @@
 package model.train;
 
-import org.springframework.context.annotation.Scope;
-
-@Scope("prototype")
+// 火车车座类
 public class TrainSeats {
-	private String ctype = "";
-	private int seatsCount = 0;
+	private String seatId = "";
+	private String carriage = "";
+	private String seatType = "";
+	private String seatLocation = "";
 	
-	public String getCtype() {
-		return ctype;
+	public String getSeatId() {
+		return seatId;
 	}
-	public void setCtype(String ctype) {
-		this.ctype = ctype;
+	public void setSeatId(String seatId) {
+		this.seatId = seatId;
 	}
-	public int getSeatsCount() {
-		return seatsCount;
+	public String getCarriage() {
+		return carriage;
 	}
-	public void setSeatsCount(int seatsCount) {
-		this.seatsCount = seatsCount;
+	public void setCarriage(String carriage) {
+		this.carriage = carriage;
 	}
-	
+	public String getSeatType() {
+		return seatType;
+	}
+	public void setSeatType(String seatType) {
+		this.seatType = seatType;
+	}
+	public String getSeatLocation() {
+		return seatLocation;
+	}
+	public void setSeatLocation(String seatLocation) {
+		this.seatLocation = seatLocation;
+	}
+	@Override
+	public String toString() {
+		return "TrainSeats [seat_id=" + seatId + ", carriage=" + carriage + ", seatType=" + seatType
+				+ ", seatLocation=" + seatLocation + "]";
+	}
 }

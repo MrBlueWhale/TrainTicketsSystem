@@ -4,12 +4,11 @@ import java.util.ArrayList;
 
 import javax.sql.DataSource;
 
-import org.springframework.context.annotation.Scope;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 
-@Scope("prototype")
+// 用户相关方法实现
 public class UserJDBCTemplate implements UserDAO{
 	private DataSource dataSource;
 	private JdbcTemplate jdbcTemplateObject; 
@@ -25,50 +24,41 @@ public class UserJDBCTemplate implements UserDAO{
 	
 	@Override
 	public User addUser(User user) {
-		String SQL = "insert into `user` (`uname`, `password`, `idcard`, `status`, `tel`) values (?, ?, ?, ?, ?)";     
-		jdbcTemplateObject.update(SQL, user.getUname(), user.getPassword(), user.getIdcard(), user.getStatus(), user.getTel());
+		String SQL = "insert into `12307`.user (user_name, password, idcard, status, telephone) values (?, ?, ?, ?, ?)";     
+		jdbcTemplateObject.update(SQL, user.getUserName(), user.getPassword(), user.getIdcard(), user.getStatus(), user.getTelephone());
 		
-		SQL = "select * from `user` where `uname` = ?";
+		SQL = "select * from `12307`.user where user_name = ?";
 		RowMapper<User> rowMapper = new BeanPropertyRowMapper<>(User.class);
-		ArrayList<User> userList = (ArrayList<User>) jdbcTemplateObject.query(SQL, rowMapper, user.getUname());
+		ArrayList<User> userList = (ArrayList<User>) jdbcTemplateObject.query(SQL, rowMapper, user.getUserName());
 		
 		return userList.get(0);
 	}
 
 	@Override
-	public void updateUser(String uid, User user) {
-		String SQL = "update `user` set `uname` = ?, `password` = ?, `idcard` = ?, `status` = ?, `tel` = ? where `uid` = ?";     
-		jdbcTemplateObject.update(SQL, user.getUname(), user.getPassword(), user.getIdcard(), user.getStatus(), user.getTel(), uid);
-	    System.out.println("Update user complete!");
-	}
-
-	@Override
-	public void deleteUser(String uid) {
-		String SQL = "delete from `user` where `uid` = ?";     
-		jdbcTemplateObject.update(SQL, uid);
-	    System.out.println("Delete user complete!");
-	}
-
-	@Override
-	public ArrayList<User> getUserByUnameAndPassword(String uname, String password) {
-		String SQL = "select * from `user` where `uname` = ? and `password` = ? ";
+	public User updateUser(User user) {
+		String SQL = "update `12307`.user set user_name = ?, password = ?, status = ?, telephone = ? where idcard = ?";     
+		jdbcTemplateObject.update(SQL, user.getUserName(), user.getPassword(), user.getStatus(), user.getTelephone(), user.getIdcard());
+	    
+		SQL = "select * from `12307`.user where user_name = ?";
 		RowMapper<User> rowMapper = new BeanPropertyRowMapper<>(User.class);
-		ArrayList<User> userList = (ArrayList<User>) jdbcTemplateObject.query(SQL, rowMapper, uname, password);
+		ArrayList<User> userList = (ArrayList<User>) jdbcTemplateObject.query(SQL, rowMapper, user.getUserName());
+		
+		return userList.get(0);
+	}
+
+	@Override
+	public ArrayList<User> getUserByIdcard(String idcard) {
+		String SQL = "select * from `12307`.user where idcard = ?";
+		RowMapper<User> rowMapper = new BeanPropertyRowMapper<>(User.class);
+		ArrayList<User> userList = (ArrayList<User>) jdbcTemplateObject.query(SQL, rowMapper, idcard);
 		return userList;
 	}
 	
 	@Override
-	public ArrayList<User> getUserByUid(String uid) {
-		String SQL = "select * from `user` where `uid` = ?";
+	public ArrayList<User> getUserByUsernameAndPassword(String username, String password) {
+		String SQL = "select * from `12307`.user where user_name = ? and password = ?";
 		RowMapper<User> rowMapper = new BeanPropertyRowMapper<>(User.class);
-		ArrayList<User> userList = (ArrayList<User>) jdbcTemplateObject.query(SQL, rowMapper, uid);
+		ArrayList<User> userList = (ArrayList<User>) jdbcTemplateObject.query(SQL, rowMapper, username, password);
 		return userList;
-	}
-
-	@Override
-	public void setUserStatus(String uid, String status) {
-		String SQL = "update `user` set `status` = ? where `uid` = ?";     
-		jdbcTemplateObject.update(SQL, status, uid);
-	    System.out.println("Update user complete!");
 	}
 }

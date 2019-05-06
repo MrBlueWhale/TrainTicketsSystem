@@ -1,24 +1,18 @@
 package model.order;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
-import org.springframework.context.annotation.Scope;
-
-@Scope("prototype")
+// 订单相关方法接口
 public interface OrderDAO {
 	//向数据库中添加一个订单
 	public Order addOrder(Order order);
 	
-	//修改订单付款信息
-	public void updateOrderStatus(String oid, String status);
+	//修改订单信息
+	public void updateOrder(String orderId, Order order);
 	
 	//删除订单
-	public void deleteOrder(String oid);
+	public void deleteOrderByOrderId(String orderId);
 	
 	//根据用户ID获取到订单信息
-	public ArrayList<Order> getOrderByUid(String uid);
-	
-	//锁定订单座位
-	public HashMap<String,String> lockSeat(String tid, String date, String ctype, String nextTo, int fromIndex, int toIndex);
+	public ArrayList<Order> getOrderByIdcard(String idcard);
 }

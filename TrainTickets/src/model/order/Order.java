@@ -1,116 +1,177 @@
 package model.order;
 
-import org.springframework.context.annotation.Scope;
-
-@Scope("prototype")
+// 订单类
 public class Order {
-	private String oid = "";
-	private String uid = "";
+	private String orderId = "";
+	private String userId = "";
 	private String passengerId = "";
-	private String passengerName = "";
-	private String tid = "";
-	private String cid = "";
-	private String location = "";
-	private String startSid = "";
-	private String endSid = "";
+	private String userName = "";
+	private String trainId = "";
+	private String trainName = "";
+	private String carriage = "";
+	private String seatType = "";
+	private String seatId = "";
+	private String seatLocation = "";
+	private String startTime = "";
+	private String startStopId = "";
+	private String startStationName = "";
+	private String endStopId = "";
+	private String endStationName = "";
 	private String date = "";
-	private String creatAt = "";
+	private String createAt = "";
 	private String status = "未付款";
-	
-	//以下为非必须属性
-	private String tname = "";
-	private String fromCity = "";
-	private String toCity = "";
-	
-	public String getOid() {
-		return oid;
+
+	public String getOrderId() {
+		return orderId;
 	}
-	public void setOid(String oid) {
-		this.oid = oid;
+
+	public void setOrderId(String orderId) {
+		this.orderId = orderId;
 	}
-	public String getUid() {
-		return uid;
+
+	public String getUserId() {
+		return userId;
 	}
-	public void setUid(String uid) {
-		this.uid = uid;
+
+	public void setUserId(String userId) {
+		this.userId = userId;
 	}
+
 	public String getPassengerId() {
 		return passengerId;
 	}
+
 	public void setPassengerId(String passengerId) {
 		this.passengerId = passengerId;
 	}
-	public String getPassengerName() {
-		return passengerName;
+
+	public String getUserName() {
+		return userName;
 	}
-	public void setPassengerName(String passengerName) {
-		this.passengerName = passengerName;
+
+	public void setUserName(String userName) {
+		this.userName = userName;
 	}
-	public String getTid() {
-		return tid;
+
+	public String getTrainId() {
+		return trainId;
 	}
-	public void setTid(String tid) {
-		this.tid = tid;
+
+	public void setTrainId(String trainId) {
+		this.trainId = trainId;
 	}
-	public String getCid() {
-		return cid;
+
+	public String getTrainName() {
+		return trainName;
 	}
-	public void setCid(String ctype) {
-		this.cid = ctype;
+
+	public void setTrainName(String trainName) {
+		this.trainName = trainName;
 	}
-	public String getLocation() {
-		return location;
+
+	public String getCarriage() {
+		return carriage;
 	}
-	public void setLocation(String location) {
-		this.location = location;
+
+	public void setCarriage(String carriage) {
+		this.carriage = carriage;
 	}
-	public String getStartSid() {
-		return startSid;
+
+	public String getSeatType() {
+		return seatType;
 	}
-	public void setStartSid(String startSid) {
-		this.startSid = startSid;
+
+	public void setSeatType(String seatType) {
+		this.seatType = seatType;
 	}
-	public String getEndSid() {
-		return endSid;
+
+	public String getSeatId() {
+		return seatId;
 	}
-	public void setEndSid(String endSid) {
-		this.endSid = endSid;
+
+	public void setSeatId(String seatId) {
+		this.seatId = seatId;
 	}
+
+	public String getSeatLocation() {
+		return seatLocation;
+	}
+
+	public void setSeatLocation(String seatLocation) {
+		this.seatLocation = seatLocation;
+	}
+
+	public String getStartTime() {
+		return startTime;
+	}
+
+	public void setStartTime(String startTime) {
+		this.startTime = startTime;
+	}
+
+	public String getStartStopId() {
+		return startStopId;
+	}
+
+	public void setStartStopId(String startStopId) {
+		this.startStopId = startStopId;
+	}
+
+	public String getStartStationName() {
+		return startStationName;
+	}
+
+	public void setStartStationName(String startStationName) {
+		this.startStationName = startStationName;
+	}
+
+	public String getEndStopId() {
+		return endStopId;
+	}
+
+	public void setEndStopId(String endStopId) {
+		this.endStopId = endStopId;
+	}
+
+	public String getEndStationName() {
+		return endStationName;
+	}
+
+	public void setEndStationName(String endStationName) {
+		this.endStationName = endStationName;
+	}
+
 	public String getDate() {
 		return date;
 	}
+
 	public void setDate(String date) {
 		this.date = date;
 	}
-	public String getCreatAt() {
-		return creatAt;
+
+	public String getCreateAt() {
+		return createAt;
 	}
-	public void setCreatAt(String creatAt) {
-		this.creatAt = creatAt;
+
+	public void setCreateAt(String creatAt) {
+		this.createAt = creatAt;
 	}
+
 	public String getStatus() {
 		return status;
 	}
+
 	public void setStatus(String status) {
 		this.status = status;
 	}
-	public String getTname() {
-		return tname;
+
+	@Override
+	public String toString() {
+		return "Order [orderId=" + orderId + ", userId=" + userId + ", passengerId=" + passengerId + ", userName="
+				+ userName + ", trainId=" + trainId + ", trainName=" + trainName + ", carriage=" + carriage
+				+ ", seatType=" + seatType + ", seatId=" + seatId + ", seatLocation=" + seatLocation + ", startTime="
+				+ startTime + ", startStopId=" + startStopId + ", startStationName=" + startStationName + ", endStopId="
+				+ endStopId + ", endStationName=" + endStationName + ", date=" + date + ", creatAt=" + createAt
+				+ ", status=" + status + "]";
 	}
-	public void setTname(String tname) {
-		this.tname = tname;
-	}
-	public String getFromCity() {
-		return fromCity;
-	}
-	public void setFromCity(String fromCity) {
-		this.fromCity = fromCity;
-	}
-	public String getToCity() {
-		return toCity;
-	}
-	public void setToCity(String toCity) {
-		this.toCity = toCity;
-	}
-	
 }

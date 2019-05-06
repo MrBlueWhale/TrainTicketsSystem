@@ -1,8 +1,6 @@
 package model.train;
 
-import org.springframework.context.annotation.Scope;
-
-@Scope("prototype")
+// 火车换乘组合类
 public class TransferTrain {
 	private String firstTid = "";
 	private String secondTid = "";

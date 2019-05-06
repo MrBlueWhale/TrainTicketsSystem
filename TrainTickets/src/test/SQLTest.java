@@ -1,8 +1,6 @@
 package test;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -10,218 +8,237 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import model.order.Order;
 import model.order.OrderJDBCTemplate;
 import model.train.Train;
-import model.train.TrainCarriage;
 import model.train.TrainJDBCTemplate;
 import model.train.TrainSeats;
-import model.train.TrainStop;
 import model.train.TransferTrain;
 import model.user.User;
 import model.user.UserJDBCTemplate;
 
+// 测试类，包含必要的接口数据
 public class SQLTest {
 	private static ApplicationContext context;
 
 	public static void main(String[] args) {
-//		addTrain();
-//		addTrainType();
-//		getTrainByTid();
-		getTrainByStop();
-//		getTidByTname();
-//		getTransferTrain();
-//		getRemainingSeats();
-//		userLogIn();
-//		queryOrder();
-//		getAllCities();
-	}
-	
-	public static void addUser() {
-		context = new ClassPathXmlApplicationContext("Beans.xml");
-	    UserJDBCTemplate userJDBCTemplate = (UserJDBCTemplate)context.getBean("UserJDBCTemplate");
+//		userLogInTest();
+//		userRegisterTest();
+//		updateUserTest();
 
-	    System.out.println("添加用户");
-	    User user = new User();
-	    user.setIdcard("000000000000000003");
-	    user.setTel("00000000003");
-	    user.setUname("user3");
-	    user.setPassword("user3");
-	    userJDBCTemplate.addUser(user);
-	}
-	
-	public static void updateUser() {
-		context = new ClassPathXmlApplicationContext("Beans.xml");
-	    UserJDBCTemplate userJDBCTemplate = (UserJDBCTemplate)context.getBean("UserJDBCTemplate");
-	    
-	    System.out.println("修改用户"); 
-	    User user = new User();
-	    user.setIdcard("000000000000000002");
-	    user.setTel("00000000002");
-	    user.setUname("user2");
-	    user.setPassword("password2");
-	    userJDBCTemplate.updateUser("1", user);
-	}
-	
-	public static void deleteUser() {
-		context = new ClassPathXmlApplicationContext("Beans.xml");
-	    UserJDBCTemplate userJDBCTemplate = (UserJDBCTemplate)context.getBean("UserJDBCTemplate");
-	    
-	    System.out.println("删除用户");
-	    userJDBCTemplate.deleteUser("2");
-	}
-	
-	public static void userLogIn() {
-		context = new ClassPathXmlApplicationContext("Beans.xml");
-	    UserJDBCTemplate userJDBCTemplate = (UserJDBCTemplate)context.getBean("UserJDBCTemplate");
-	    
-	    System.out.println("用户登陆");
-	    ArrayList<User> userList = userJDBCTemplate.getUserByUnameAndPassword("admin", "admin");
-	    System.out.println(userList.size());
-	    
+//		getAllCitiesTest();
+//		getTrainByStopTest();
+//		getTransferTrainTest();
+//		getTrainByTidTest();
+//		getRemainingSeatsTest();
+
+		addOrderTest();
+//		queryOrderTest();
+//		updateOrderTest();
+//		deleteOrderTest();
 	}
 
-	public static void addOrder() {
+	public static void userLogInTest() {
 		context = new ClassPathXmlApplicationContext("Beans.xml");
-	    OrderJDBCTemplate orderJDBCTemplate = (OrderJDBCTemplate)context.getBean("OrderJDBCTemplate");
+		UserJDBCTemplate userJDBCTemplate = (UserJDBCTemplate) context.getBean("UserJDBCTemplate");
 
-	    System.out.println("添加订单");
-	    Order order = new Order();
-	    order.setUid("1");
-	    order.setTid("G1272");
-	    order.setStartSid("沈阳");
-	    order.setEndSid("济南");
-	    order.setDate("2018-1-1 12:00:00");
-	    order.setCreatAt("2018-1-1 12:00:00");
-	    order.setStatus("未付款");
-	    orderJDBCTemplate.addOrder(order);
-	}
-	
-	public static void queryOrder() {
-		context = new ClassPathXmlApplicationContext("Beans.xml");
-	    OrderJDBCTemplate orderJDBCTemplate = (OrderJDBCTemplate)context.getBean("OrderJDBCTemplate");
-	    
-	    System.out.println("查询订单");
-	    ArrayList<Order> orderList = orderJDBCTemplate.getOrderByUid("1");
-	    System.out.println(orderList.get(0).getTname());
-	    System.out.println(orderList.get(0).getFromCity());
-	    System.out.println(orderList.get(0).getToCity());
-	}
-	
-	public static void updateOrderStatus() {
-		context = new ClassPathXmlApplicationContext("Beans.xml");
-	    OrderJDBCTemplate orderJDBCTemplate = (OrderJDBCTemplate)context.getBean("OrderJDBCTemplate");
-	    
-	    System.out.println("修改订单状态");
-	    orderJDBCTemplate.updateOrderStatus("2", "已付款");
-	}
-	
-	public static void deleteOrder() {
-		context = new ClassPathXmlApplicationContext("Beans.xml");
-	    OrderJDBCTemplate orderJDBCTemplate = (OrderJDBCTemplate)context.getBean("OrderJDBCTemplate");
-	    
-	    System.out.println("删除订单");
-	    orderJDBCTemplate.deleteOrder("2");
-	}
-	
-	public static void addTrainType() {
-		System.out.println("新建一种车型");
-		context = new ClassPathXmlApplicationContext("Beans.xml");
-		TrainJDBCTemplate trainJDBCTemplate = (TrainJDBCTemplate) context.getBean("TrainJDBCTemplate");
-
-		ArrayList<TrainCarriage> trainCarriage = new ArrayList<TrainCarriage>();
-		List<String> carriageType = Arrays.asList("硬座", "硬座", "硬座", "硬座", "硬座", "硬座", "餐车", "硬卧", "硬卧", "硬卧", "硬卧",
-				"硬卧", "软卧");
-		List<String> carriageCapacity = Arrays.asList("118", "118", "118", "118", "118", "118", "0", "60", "60", "60",
-				"60", "60", "32");
-		for (int a = 0; a < carriageType.size(); a++) {
-			TrainCarriage carriage = new TrainCarriage();
-			carriage.setCtype(carriageType.get(a));
-			carriage.setCapacity(carriageCapacity.get(a));
-			trainCarriage.add(carriage);
-		}
-		trainJDBCTemplate.addTrainCarriage("快速列车", trainCarriage);
-	}
-
-	public static void addTrain() {
-		System.out.println("新建一辆列车");
-		context = new ClassPathXmlApplicationContext("Beans.xml");
-		TrainJDBCTemplate trainJDBCTemplate = (TrainJDBCTemplate) context.getBean("TrainJDBCTemplate");
-
-		ArrayList<TrainStop> trainStop = new ArrayList<TrainStop>();
-		List<String> stopCity = Arrays.asList("北京", "武汉", "长沙", "贵阳", "昆明");
-		List<String> stopStation = Arrays.asList("北京南", "武汉", "长沙南", "贵阳北", "昆明南");
-		List<String> arriveTime = Arrays.asList("11:33", "17:12", "19:21", "20:23", "22:17");
-		List<String> stopTime = Arrays.asList("0", "2", "2", "2", "0");
-		List<String> mileage = Arrays.asList("0", "50", "100", "150", "200");
-		for (int a = 0; a < stopCity.size(); a++) {
-			TrainStop stop = new TrainStop();
-			stop.setCity(stopCity.get(a));
-			stop.setStation(stopStation.get(a));
-			stop.setArriveTime(arriveTime.get(a));
-			stop.setStopTime(stopTime.get(a));
-			stop.setMileage(mileage.get(a));
-			trainStop.add(stop);
-		}
-
-		Train train = new Train();
-		train.setTname("G407");
-		train.setType("高速动车组");
-		train.setStopInfo(trainStop);
-
-		trainJDBCTemplate.addTrain(train);
-
-	}
-	
-	public static void getTrainByTid() {
-		System.out.println("获取火车信息");
-		context = new ClassPathXmlApplicationContext("Beans.xml");
-		TrainJDBCTemplate trainJDBCTemplate = (TrainJDBCTemplate) context.getBean("TrainJDBCTemplate");
-		
-		Train train = trainJDBCTemplate.getTrainByTid("4");
-		System.out.println(train.getTname());
-		for(int a = 0;a<train.getStopInfo().size();a++) {
-			System.out.println(train.getStopInfo().get(a).getStation());
+		System.out.println("用户登录");
+		ArrayList<User> userList = userJDBCTemplate.getUserByUsernameAndPassword("user3", "123");
+		if (userList.size() == 1 && !userList.get(0).getStatus().equals("限制购票")) {
+			System.out.println("登录成功");
+			System.out.println(userList.get(0).toString());
+		} else if (userList.size() == 1 && userList.get(0).getStatus().equals("限制购票")) {
+			System.out.println("您被限制购票");
+		} else {
+			System.out.println("登录失败，您输入的账号或密码可能有误");
 		}
 	}
-	
-	public static void getTrainByStop() {
-		System.out.println("根据经停信息获取火车信息");
+
+	public static void userRegisterTest() {
 		context = new ClassPathXmlApplicationContext("Beans.xml");
-		TrainJDBCTemplate trainJDBCTemplate = (TrainJDBCTemplate) context.getBean("TrainJDBCTemplate");
-		
-		ArrayList<Train> trainList = trainJDBCTemplate.getTrainByStop("南京", "北京", "2018-09-01");
-		for(int a = 0;a<trainList.size();a++) {
-			System.out.println(trainList.get(a).getTname() + " " + trainList.get(a).getStart() + " " + trainList.get(a).getEnd());
+		UserJDBCTemplate userJDBCTemplate = (UserJDBCTemplate) context.getBean("UserJDBCTemplate");
+
+		System.out.println("用户注册");
+
+		User user = new User();
+		user.setIdcard("6");
+		user.setTelephone("6");
+		user.setUserName("user6");
+		user.setPassword("123");
+		user.setStatus("正常");
+
+		ArrayList<User> userList = userJDBCTemplate.getUserByIdcard(user.getIdcard());
+		if (userList.size() == 0) {
+			System.out.println("添加用户");
+			User newUser = userJDBCTemplate.addUser(user);
+			System.out.println(newUser.toString());
+		} else {
+			System.out.println("此身份证号已被注册");
 		}
 	}
-	
-	public static void getTransferTrain() {
-		System.out.println("根据经停信息获取火车换乘信息");
+
+	public static void updateUserTest() {
 		context = new ClassPathXmlApplicationContext("Beans.xml");
-		TrainJDBCTemplate trainJDBCTemplate = (TrainJDBCTemplate) context.getBean("TrainJDBCTemplate");
-		ArrayList<TransferTrain> transfer = trainJDBCTemplate.getTrainTransfer("杭州", "济南", "2018-2-2");
-		
-		System.out.println(transfer.get(0).getFirstTid());
-		System.out.println(transfer.get(0).getSecondTid());
-		System.out.println(transfer.get(0).getFirstTname());
-		System.out.println(transfer.get(0).getSecondTname());
-		System.out.println(transfer.get(0).getTransferStation());
+		UserJDBCTemplate userJDBCTemplate = (UserJDBCTemplate) context.getBean("UserJDBCTemplate");
+
+		System.out.println("修改用户");
+
+		User user = new User();
+		user.setIdcard("3");
+		user.setTelephone("3");
+		user.setUserName("user3");
+		user.setPassword("123");
+		user.setStatus("限制购票");
+
+		User newUser = userJDBCTemplate.updateUser(user);
+		System.out.println("修改后的结果");
+		System.out.println(newUser.toString());
 	}
-	
-	public static void getRemainingSeats() {
-		System.out.println("余票查询");
-		context = new ClassPathXmlApplicationContext("Beans.xml");
-		TrainJDBCTemplate trainJDBCTemplate = (TrainJDBCTemplate) context.getBean("TrainJDBCTemplate");
-		
-		ArrayList<TrainSeats> seats = trainJDBCTemplate.getRemainingSeats("4", "2018-1-1","1","2");
-		System.out.println(seats.get(0).getCtype());
-		System.out.println(seats.get(0).getSeatsCount());
-	}
-	
-	public static void getAllCities() {
+
+	public static void getAllCitiesTest() {
 		System.out.println("查询所有城市");
 		context = new ClassPathXmlApplicationContext("Beans.xml");
 		TrainJDBCTemplate trainJDBCTemplate = (TrainJDBCTemplate) context.getBean("TrainJDBCTemplate");
-		
+
 		ArrayList<String> city = trainJDBCTemplate.getAllCities();
 		System.out.println(city);
+	}
+
+	public static void getTrainByStopTest() {
+		System.out.println("根据经停信息获取火车信息");
+		context = new ClassPathXmlApplicationContext("Beans.xml");
+		TrainJDBCTemplate trainJDBCTemplate = (TrainJDBCTemplate) context.getBean("TrainJDBCTemplate");
+
+		ArrayList<Train> trainList = trainJDBCTemplate.getTrainByStop("济南", "沈阳", "2019-01-01");
+		if (!trainList.isEmpty()) {
+			for (int a = 0; a < trainList.size(); a++) {
+				System.out.println(trainList.get(a).toString());
+			}
+		} else {
+			System.out.println("无火车信息");
+		}
+	}
+
+	public static void getTransferTrainTest() {
+		System.out.println("根据经停信息获取火车换乘信息");
+		context = new ClassPathXmlApplicationContext("Beans.xml");
+		TrainJDBCTemplate trainJDBCTemplate = (TrainJDBCTemplate) context.getBean("TrainJDBCTemplate");
+		ArrayList<TransferTrain> transfer = trainJDBCTemplate.getTrainTransfer("广州", "长春", "2019-01-01");
+
+		if (!transfer.isEmpty()) {
+			for (int a = 0; a < transfer.size(); a++) {
+				System.out.println(transfer.get(a).getFirstTid() + " " + transfer.get(a).getSecondTid() + " "
+						+ transfer.get(a).getFirstTname() + " " + transfer.get(a).getSecondTname() + " "
+						+ transfer.get(a).getTransferStation());
+			}
+		} else {
+			System.out.println("无换乘");
+		}
+	}
+
+	public static void getTrainByTidTest() {
+		System.out.println("获取火车信息");
+		context = new ClassPathXmlApplicationContext("Beans.xml");
+		TrainJDBCTemplate trainJDBCTemplate = (TrainJDBCTemplate) context.getBean("TrainJDBCTemplate");
+
+		Train train = trainJDBCTemplate.getTrainByTrainId("1");
+		System.out.println(train.getTrainName());
+		for (int a = 0; a < train.getStopInfo().size(); a++) {
+			System.out.println(train.getStopInfo().get(a).getStationName());
+		}
+		for (int a = 0; a < train.getSeatsInfo().size(); a++) {
+			System.out.println(
+					train.getSeatsInfo().get(a).getCarriage() + " " + train.getSeatsInfo().get(a).getSeatLocation());
+		}
+	}
+
+	public static void getRemainingSeatsTest() {
+		System.out.println("余票查询");
+		context = new ClassPathXmlApplicationContext("Beans.xml");
+		TrainJDBCTemplate trainJDBCTemplate = (TrainJDBCTemplate) context.getBean("TrainJDBCTemplate");
+
+		ArrayList<TrainSeats> seats = trainJDBCTemplate.getRemainingSeats("5", "2019-01-02", "1", "5");
+		int first = 0;
+		int second = 0;
+		for (int a = 0; a < seats.size(); a++) {
+			System.out.println(seats.get(a).toString());
+			if (seats.get(a).getSeatType().equals("一等座")) {
+				first++;
+			} else if (seats.get(a).getSeatType().equals("二等座")) {
+				second++;
+			}
+		}
+		System.out.println("一等座" + first + "个，二等座" + second + "个。");
+	}
+
+	public static void addOrderTest() {
+		context = new ClassPathXmlApplicationContext("Beans.xml");
+		OrderJDBCTemplate orderJDBCTemplate = (OrderJDBCTemplate) context.getBean("OrderJDBCTemplate");
+
+		System.out.println("添加订单");
+		Order order = new Order();
+		order.setUserId("1");
+		order.setPassengerId("1");
+		order.setUserName("user1");
+		order.setTrainId("1");
+		order.setTrainName("G1");
+		order.setCarriage("1");
+		order.setSeatType("一等座");
+		order.setSeatId("3");
+		order.setSeatLocation("01F");
+		order.setStartTime("12:00:00");
+		order.setStartStopId("0");
+		order.setStartStationName("沈阳北");
+		order.setEndStopId("2");
+		order.setEndStationName("深圳北");
+		order.setDate("2019-01-01");
+		order.setCreateAt("2018-12-31");
+		order.setStatus("未付款");
+
+		Order newOrder = orderJDBCTemplate.addOrder(order);
+		System.out.println(newOrder.toString());
+	}
+
+	public static void queryOrderTest() {
+		context = new ClassPathXmlApplicationContext("Beans.xml");
+		OrderJDBCTemplate orderJDBCTemplate = (OrderJDBCTemplate) context.getBean("OrderJDBCTemplate");
+
+		System.out.println("查询订单");
+		ArrayList<Order> orderList = orderJDBCTemplate.getOrderByIdcard("000000000000000001");
+		for (int a = 0; a < orderList.size(); a++) {
+			System.out.println(orderList.get(a).toString());
+		}
+	}
+
+	public static void updateOrderTest() {
+		context = new ClassPathXmlApplicationContext("Beans.xml");
+		OrderJDBCTemplate orderJDBCTemplate = (OrderJDBCTemplate) context.getBean("OrderJDBCTemplate");
+
+		System.out.println("修改订单状态");
+		Order order = new Order();
+		order.setOrderId("1");
+		order.setUserId("1");
+		order.setPassengerId("1");
+		order.setUserName("user1123");
+		order.setTrainId("1");
+		order.setTrainName("G1");
+		order.setCarriage("1");
+		order.setSeatType("一等座");
+		order.setSeatId("3");
+		order.setSeatLocation("01F");
+		order.setStartTime("12:00:00");
+		order.setStartStopId("0");
+		order.setStartStationName("沈阳北");
+		order.setEndStopId("2");
+		order.setEndStationName("深圳北");
+		order.setDate("2019-01-01");
+		order.setCreateAt("2018-12-31 12:00:00");
+		order.setStatus("未付款");
+		orderJDBCTemplate.updateOrder("1", order);
+	}
+
+	public static void deleteOrderTest() {
+		context = new ClassPathXmlApplicationContext("Beans.xml");
+		OrderJDBCTemplate orderJDBCTemplate = (OrderJDBCTemplate) context.getBean("OrderJDBCTemplate");
+
+		System.out.println("删除订单");
+		orderJDBCTemplate.deleteOrderByOrderId("195");
 	}
 }

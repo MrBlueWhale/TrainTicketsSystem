@@ -4,111 +4,169 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.alibaba.fastjson.JSON;
+
 import model.order.Order;
 import model.order.OrderJDBCTemplate;
-import model.train.Train;
-import model.train.TrainJDBCTemplate;
-import model.train.TransferTrain;
-import model.user.User;
-import model.user.UserJDBCTemplate;
+import tools.HttpTools;
+import tools.ResponseContent;
 
 @Controller
 public class OrderController {
 	private ApplicationContext context;
 
-	// 订单-浏览所有订单
-	@RequestMapping(value = "/order", method = RequestMethod.POST)
-	public String orderPage(ModelMap model, HttpServletRequest request) {
-		String uid = request.getParameter("uid");
-		
-		context = new ClassPathXmlApplicationContext("Beans.xml");
-		UserJDBCTemplate userJDBCTemplate = (UserJDBCTemplate) context.getBean("UserJDBCTemplate");
-		ArrayList<User> userList = userJDBCTemplate.getUserByUid(uid);
+	// 锁定座位（添加订单）
+	@CrossOrigin(origins = "*")
+	@RequestMapping(value = "/lockSeat", method = RequestMethod.POST)
+	public void lockSeat(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException {
+		request.setCharacterEncoding("UTF-8");
+		response.setCharacterEncoding("UTF-8");
 
-		if (userList.size() == 1 && !userList.get(0).getStatus().equals("限制购票")) {
-			OrderJDBCTemplate orderJDBCTemplate = (OrderJDBCTemplate) context.getBean("OrderJDBCTemplate");
-			ArrayList<Order> orderList = orderJDBCTemplate.getOrderByUid(userList.get(0).getUid());
-			model.addAttribute("user", userList.get(0));
-			model.addAttribute("orderList", orderList);
-			return "order";
-		} else if (userList.size() == 1 && userList.get(0).getStatus().equals("限制购票")){
-			return "statusError";
-		} else {
-			return "error";
-		}
+		String userId = new String(request.getParameter("userId"));
+		String passengerId = new String(request.getParameter("passengerId"));
+		String userName = new String(request.getParameter("userName"));
+		String trainId = new String(request.getParameter("trainId"));
+		String trainName = new String(request.getParameter("trainName"));
+		String carriage = new String(request.getParameter("carriage"));
+		String seatType = new String(request.getParameter("seatType"));
+		String seatId = new String(request.getParameter("seatId"));
+		String seatLocation = new String(request.getParameter("seatLocation"));
+		String startTime = new String(request.getParameter("startTime"));
+		String startStopId = new String(request.getParameter("startStopId"));
+		String startStationName = new String(request.getParameter("startStationName"));
+		String endStopId = new String(request.getParameter("endStopId"));
+		String endStationName = new String(request.getParameter("endStationName"));
+		String date = new String(request.getParameter("date"));
+		String createAt = new String(request.getParameter("createAt"));
+		String status = new String(request.getParameter("status"));
+
+		context = new ClassPathXmlApplicationContext("Beans.xml");
+		OrderJDBCTemplate orderJDBCTemplate = (OrderJDBCTemplate) context.getBean("OrderJDBCTemplate");
+
+		Order order = new Order();
+		order.setUserId(userId);
+		order.setPassengerId(passengerId);
+		order.setUserName(userName);
+		order.setTrainId(trainId);
+		order.setTrainName(trainName);
+		order.setCarriage(carriage);
+		order.setSeatType(seatType);
+		order.setSeatId(seatId);
+		order.setSeatLocation(seatLocation);
+		order.setStartTime(startTime);
+		order.setStartStopId(startStopId);
+		order.setStartStationName(startStationName);
+		order.setEndStopId(endStopId);
+		order.setEndStationName(endStationName);
+		order.setDate(date);
+		order.setCreateAt(createAt);
+		order.setStatus(status);
+
+		Order newOrder = orderJDBCTemplate.addOrder(order);
+		String jsonOutput = JSON.toJSONString(newOrder);
+		ResponseContent responseContent = new ResponseContent("1000", jsonOutput, "successful");
+		HttpTools.responseTools(response, responseContent);
 	}
 
-	// 改签请求
-	@RequestMapping(value = "/changeOrder", method = RequestMethod.POST)
-	public String changeOrderRequest(ModelMap model, HttpServletRequest request) throws UnsupportedEncodingException {
-		String uid = request.getParameter("uid");
-		String oid = new String(request.getParameter("oid").getBytes("ISO-8859-1"), "UTF-8");
-		String startCity = new String(request.getParameter("startCity").getBytes("ISO-8859-1"), "UTF-8");
-		String endCity = new String(request.getParameter("endCity").getBytes("ISO-8859-1"), "UTF-8");
-		String date = new String(request.getParameter("date").getBytes("ISO-8859-1"), "UTF-8");
-		
-		System.out.println(startCity + endCity + date);
+	// 查询订单
+	@CrossOrigin(origins = "*")
+	@RequestMapping(value = "/queryOrder", method = RequestMethod.POST)
+	public void queryOrder(HttpServletRequest request, HttpServletResponse response)
+			throws UnsupportedEncodingException {
+		request.setCharacterEncoding("UTF-8");
+		response.setCharacterEncoding("UTF-8");
+
+		String idcard = new String(request.getParameter("idcard"));
 
 		context = new ClassPathXmlApplicationContext("Beans.xml");
-		UserJDBCTemplate userJDBCTemplate = (UserJDBCTemplate) context.getBean("UserJDBCTemplate");
-		ArrayList<User> userList = userJDBCTemplate.getUserByUid(uid);
+		OrderJDBCTemplate orderJDBCTemplate = (OrderJDBCTemplate) context.getBean("OrderJDBCTemplate");
 
-		TrainJDBCTemplate trainJDBCTemplate = (TrainJDBCTemplate) context.getBean("TrainJDBCTemplate");
-		ArrayList<Train> trainList = trainJDBCTemplate.getTrainByStop(startCity, endCity, date);
-
-		for (int a = 0; a < trainList.size(); a++) {
-			trainList.get(a).setSeatsInfo(trainJDBCTemplate.getRemainingSeats(trainList.get(a).getTid(), date,
-					trainList.get(a).getStartIndex() + "", trainList.get(a).getEndIndex() + ""));
-		}
-
-		ArrayList<TransferTrain> transferList = trainJDBCTemplate.getTrainTransfer(startCity, endCity, date);
-
-		if (userList.size() == 1 && !userList.get(0).getStatus().equals("限制购票")) {
-			OrderJDBCTemplate orderJDBCTemplate = (OrderJDBCTemplate) context.getBean("OrderJDBCTemplate");
-			orderJDBCTemplate.deleteOrder(oid);
-			
-			model.addAttribute("user", userList.get(0));
-			model.addAttribute("trainList", trainList);
-			model.addAttribute("startCity", startCity);
-			model.addAttribute("endCity", endCity);
-			model.addAttribute("transferList", transferList);
-			return "trainShow";
-		} else if (userList.size() == 1 && userList.get(0).getStatus().equals("限制购票")){
-			return "statusError";
-		} else {
-			return "error";
-		}
+		System.out.println("查询订单");
+		ArrayList<Order> orderList = orderJDBCTemplate.getOrderByIdcard(idcard);
+		String jsonOutput = JSON.toJSONString(orderList);
+		ResponseContent responseContent = new ResponseContent("1000", jsonOutput, "successful");
+		HttpTools.responseTools(response, responseContent);
 	}
 
-	// 取消订单请求
-	@RequestMapping(value = "/cancelOrder", method = RequestMethod.POST)
-	public String cancelOrder(ModelMap model, HttpServletRequest request) throws UnsupportedEncodingException {
-		String uid = request.getParameter("uid");
-		String oid = new String(request.getParameter("oid").getBytes("ISO-8859-1"), "UTF-8");
+	// 修改订单付款状态
+	@CrossOrigin(origins = "*")
+	@RequestMapping(value = "/updateOrder", method = RequestMethod.POST)
+	public void updateOrder(HttpServletRequest request, HttpServletResponse response)
+			throws UnsupportedEncodingException {
+		request.setCharacterEncoding("UTF-8");
+		response.setCharacterEncoding("UTF-8");
+
+		String orderId = new String(request.getParameter("orderId"));
+		String userId = new String(request.getParameter("userId"));
+		String passengerId = new String(request.getParameter("passengerId"));
+		String userName = new String(request.getParameter("userName"));
+		String trainId = new String(request.getParameter("trainId"));
+		String trainName = new String(request.getParameter("trainName"));
+		String carriage = new String(request.getParameter("carriage"));
+		String seatType = new String(request.getParameter("seatType"));
+		String seatId = new String(request.getParameter("seatId"));
+		String seatLocation = new String(request.getParameter("seatLocation"));
+		String startTime = new String(request.getParameter("startTime"));
+		String startStopId = new String(request.getParameter("startStopId"));
+		String startStationName = new String(request.getParameter("startStationName"));
+		String endStopId = new String(request.getParameter("endStopId"));
+		String endStationName = new String(request.getParameter("endStationName"));
+		String date = new String(request.getParameter("date"));
+		String createAt = new String(request.getParameter("createAt"));
+		String status = new String(request.getParameter("status"));
 
 		context = new ClassPathXmlApplicationContext("Beans.xml");
-		UserJDBCTemplate userJDBCTemplate = (UserJDBCTemplate) context.getBean("UserJDBCTemplate");
-		ArrayList<User> userList = userJDBCTemplate.getUserByUid(uid);
+		OrderJDBCTemplate orderJDBCTemplate = (OrderJDBCTemplate) context.getBean("OrderJDBCTemplate");
 
-		if (userList.size() == 1 && !userList.get(0).getStatus().equals("限制购票")) {
-			OrderJDBCTemplate orderJDBCTemplate = (OrderJDBCTemplate) context.getBean("OrderJDBCTemplate");
-			orderJDBCTemplate.deleteOrder(oid);
-			ArrayList<Order> orderList = orderJDBCTemplate.getOrderByUid(userList.get(0).getUid());
-			model.addAttribute("user", userList.get(0));
-			model.addAttribute("orderList", orderList);
-			return "order";
-		} else if (userList.size() == 1 && userList.get(0).getStatus().equals("限制购票")){
-			return "statusError";
-		} else {
-			return "error";
-		}
+		Order order = new Order();
+		order.setOrderId(orderId);
+		order.setUserId(userId);
+		order.setPassengerId(passengerId);
+		order.setUserName(userName);
+		order.setTrainId(trainId);
+		order.setTrainName(trainName);
+		order.setCarriage(carriage);
+		order.setSeatType(seatType);
+		order.setSeatId(seatId);
+		order.setSeatLocation(seatLocation);
+		order.setStartTime(startTime);
+		order.setStartStopId(startStopId);
+		order.setStartStationName(startStationName);
+		order.setEndStopId(endStopId);
+		order.setEndStationName(endStationName);
+		order.setDate(date);
+		order.setCreateAt(createAt);
+		order.setStatus(status);
+
+		orderJDBCTemplate.updateOrder(orderId, order);
+		ResponseContent responseContent = new ResponseContent("1000", "修改成功", "successful");
+		HttpTools.responseTools(response, responseContent);
+	}
+
+	// 删除订单
+	@CrossOrigin(origins = "*")
+	@RequestMapping(value = "/deleteOrder", method = RequestMethod.POST)
+	public void deleteOrder(HttpServletRequest request, HttpServletResponse response)
+			throws UnsupportedEncodingException {
+		request.setCharacterEncoding("UTF-8");
+		response.setCharacterEncoding("UTF-8");
+
+		String orderId = new String(request.getParameter("orderId"));
+
+		context = new ClassPathXmlApplicationContext("Beans.xml");
+		OrderJDBCTemplate orderJDBCTemplate = (OrderJDBCTemplate) context.getBean("OrderJDBCTemplate");
+		orderJDBCTemplate.deleteOrderByOrderId(orderId);
+
+		ResponseContent responseContent = new ResponseContent("1000", "修改成功", "successful");
+		HttpTools.responseTools(response, responseContent);
 	}
 }

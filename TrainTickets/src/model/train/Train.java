@@ -2,43 +2,52 @@ package model.train;
 
 import java.util.ArrayList;
 
-import org.springframework.context.annotation.Scope;
-
-@Scope("prototype")
+// 火车类
 public class Train {
-	private String tid = "";
-	private String tname = "";
-	private String type = "";
+	private String trainId = "";
+	private String trainName = "";
+	private String trainType = "";
 	
 	//以下为非必需属性
+	private String startIndex = "";
+	private String endIndex = "";
 	private String start = "";
 	private String end = "";
 	private String startTime = "";
 	private String endTime = "";
-	private int mileage = 0;
+	private String mileage = "";
 	private ArrayList<TrainStop> stopInfo = null;
-	private ArrayList<TrainCarriage> carriageInfo = null;
 	private ArrayList<TrainSeats> seatsInfo = null;
-	private int startIndex = 0;
-	private int endIndex = 0;
 	
-	public String getTid() {
-		return tid;
+	public String getTrainId() {
+		return trainId;
 	}
-	public void setTid(String tid) {
-		this.tid = tid;
+	public void setTrainId(String trainId) {
+		this.trainId = trainId;
 	}
-	public String getTname() {
-		return tname;
+	public String getTrainName() {
+		return trainName;
 	}
-	public void setTname(String tname) {
-		this.tname = tname;
+	public void setTrainName(String trainName) {
+		this.trainName = trainName;
 	}
-	public String getType() {
-		return type;
+	public String getTrainType() {
+		return trainType;
 	}
-	public void setType(String type) {
-		this.type = type;
+	public void setTrainType(String trainType) {
+		this.trainType = trainType;
+	}
+	public String getStartIndex() {
+		return startIndex;
+	}
+	public void setStartIndex(String startIndex) {
+		this.startIndex = startIndex;
+	}
+	public String getEndIndex() {
+		return endIndex;
+	}
+	public void setEndIndex(String endIndex) {
+		this.endIndex = endIndex;
 	}
 	public String getStart() {
 		return start;
@@ -64,10 +73,10 @@ public class Train {
 	public void setEndTime(String endTime) {
 		this.endTime = endTime;
 	}
-	public int getMileage() {
+	public String getMileage() {
 		return mileage;
 	}
-	public void setMileage(int mileage) {
+	public void setMileage(String mileage) {
 		this.mileage = mileage;
 	}
 	public ArrayList<TrainStop> getStopInfo() {
@@ -76,28 +85,17 @@ public class Train {
 	public void setStopInfo(ArrayList<TrainStop> stopInfo) {
 		this.stopInfo = stopInfo;
 	}
-	public ArrayList<TrainCarriage> getCarriageInfo() {
-		return carriageInfo;
-	}
-	public void setCarriageInfo(ArrayList<TrainCarriage> carriageInfo) {
-		this.carriageInfo = carriageInfo;
-	}
 	public ArrayList<TrainSeats> getSeatsInfo() {
 		return seatsInfo;
 	}
 	public void setSeatsInfo(ArrayList<TrainSeats> seatsInfo) {
 		this.seatsInfo = seatsInfo;
 	}
-	public int getStartIndex() {
-		return startIndex;
-	}
-	public void setStartIndex(int startIndex) {
-		this.startIndex = startIndex;
-	}
-	public int getEndIndex() {
-		return endIndex;
-	}
-	public void setEndIndex(int endIndex) {
-		this.endIndex = endIndex;
+	@Override
+	public String toString() {
+		return "Train [trainId=" + trainId + ", trainName=" + trainName + ", trainType=" + trainType + ", startIndex="
+				+ startIndex + ", endIndex=" + endIndex + ", start=" + start + ", end=" + end + ", startTime="
+				+ startTime + ", endTime=" + endTime + ", mileage=" + mileage + ", stopInfo=" + stopInfo
+				+ ", seatsInfo=" + seatsInfo + "]";
 	}
 }

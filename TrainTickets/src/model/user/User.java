@@ -1,27 +1,25 @@
 package model.user;
 
-import org.springframework.context.annotation.Scope;
-
-@Scope("prototype")
+// 用户类
 public class User {
-	private String uid = "";
-	private String uname = "";
+	private String userId = "";
+	private String userName = "";
 	private String password = "";
 	private String idcard = "";
-	private String status = "正常";
-	private String tel = "";
+	private String status = "0";
+	private String telephone = "";
 	
-	public String getUid() {
-		return uid;
+	public String getUserId() {
+		return userId;
 	}
-	public void setUid(String uid) {
-		this.uid = uid;
+	public void setUserId(String uid) {
+		this.userId = uid;
 	}
-	public String getUname() {
-		return uname;
+	public String getUserName() {
+		return userName;
 	}
-	public void setUname(String username) {
-		this.uname = username;
+	public void setUserName(String username) {
+		this.userName = username;
 	}
 	public String getPassword() {
 		return password;
@@ -41,10 +39,15 @@ public class User {
 	public void setStatus(String status) {
 		this.status = status;
 	}
-	public String getTel() {
-		return tel;
+	public String getTelephone() {
+		return telephone;
 	}
-	public void setTel(String tel) {
-		this.tel = tel;
+	public void setTelephone(String tel) {
+		this.telephone = tel;
+	}
+	@Override
+	public String toString() {
+		return "User [userId=" + userId + ", userName=" + userName + ", password=" + password + ", idcard=" + idcard
+				+ ", status=" + status + ", telephone=" + telephone + "]";
 	}
 }

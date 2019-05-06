@@ -1,16 +1,13 @@
 package model.order;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-
 import javax.sql.DataSource;
 
-import org.springframework.context.annotation.Scope;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 
-@Scope("prototype")
+//订单相关方法接口实现
 public class OrderJDBCTemplate implements OrderDAO {
 	private DataSource dataSource;
 	private JdbcTemplate jdbcTemplateObject;
@@ -26,69 +23,49 @@ public class OrderJDBCTemplate implements OrderDAO {
 
 	@Override
 	public Order addOrder(Order order) {
-		String SQL = "insert into `order` (`uid`, `passenger_id`, `passenger_name`, `tid`, `cid`, `location`, `start_sid`, `end_sid`, `date`, `create_at`, `status`) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-		jdbcTemplateObject.update(SQL, order.getUid(), order.getPassengerId(), order.getPassengerName(), order.getTid(),
-				order.getCid(), order.getLocation(), order.getStartSid(), order.getEndSid(), order.getDate(),
-				order.getCreatAt(), order.getStatus());
-		
-		SQL = "select * from `order` as o where tid = ? and cid = ? and location = ? and date = ? and start_sid = ? and end_sid = ? ";
+		String SQL = "insert into `12307`.order (user_id, idcard, user_name, train_id, train_name, carriage, "
+				+ "seat_type, seat_id, seat_location, start_time, start_stop_id, start_station_name, end_stop_id, "
+				+ "end_station_name, date, create_at, status) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+		jdbcTemplateObject.update(SQL, order.getUserId(), order.getPassengerId(), order.getUserName(),
+				order.getTrainId(), order.getTrainName(), order.getCarriage(), order.getSeatType(), order.getSeatId(),
+				order.getSeatLocation(), order.getStartTime(), order.getStartStopId(), order.getStartStationName(),
+				order.getEndStopId(), order.getEndStationName(), order.getDate(), order.getCreateAt(),
+				order.getStatus());
+
+		SQL = "select * from `12307`.order as o where idcard = ? and seat_type = ? and seat_id = ?";
 		RowMapper<Order> rowMapper = new BeanPropertyRowMapper<>(Order.class);
-		ArrayList<Order> orderList = (ArrayList<Order>) jdbcTemplateObject.query(SQL, rowMapper, order.getTid(), order.getCid(), order.getLocation(), order.getDate(), order.getStartSid(), order.getEndSid());
-		
+		ArrayList<Order> orderList = (ArrayList<Order>) jdbcTemplateObject.query(SQL, rowMapper, order.getPassengerId(),
+				order.getSeatType(), order.getSeatId());
+
 		System.out.println("Create order complete!");
 		return orderList.get(0);
 	}
 
 	@Override
-	public void updateOrderStatus(String oid, String status) {
-		String SQL = "update `order` set `status` = ? where `oid` = ?";
-		jdbcTemplateObject.update(SQL, status, oid);
+	public void updateOrder(String orderId, Order order) {
+		String SQL = "update `12307`.order set user_id = ?, idcard = ?, user_name = ?, train_id = ?, train_name = ?, carriage = ?, "
+				+ "seat_type = ?, seat_id = ?, seat_location = ?, start_time = ?, start_stop_id = ?, start_station_name = ?, end_stop_id = ?, "
+				+ "end_station_name = ?, date = ?, create_at = ?, status = ? where order_id = ?";
+		jdbcTemplateObject.update(SQL, order.getUserId(), order.getPassengerId(), order.getUserName(),
+				order.getTrainId(), order.getTrainName(), order.getCarriage(), order.getSeatType(), order.getSeatId(),
+				order.getSeatLocation(), order.getStartTime(), order.getStartStopId(), order.getStartStationName(),
+				order.getEndStopId(), order.getEndStationName(), order.getDate(), order.getCreateAt(),
+				order.getStatus(), orderId);
 		System.out.println("Update order complete!");
 	}
 
 	@Override
-	public void deleteOrder(String oid) {
-		String SQL = "delete from `order` where oid = ?";
-		jdbcTemplateObject.update(SQL, oid);
+	public void deleteOrderByOrderId(String orderId) {
+		String SQL = "delete from `12307`.order where order_id = ?";
+		jdbcTemplateObject.update(SQL, orderId);
 		System.out.println("Delete order complete!");
 	}
 
 	@Override
-	public ArrayList<Order> getOrderByUid(String uid) {
-		String SQL = "select o.oid, uid, passenger_id, passenger_name, o.tid, o.cid, location, o.start_sid, o.end_sid, date, create_at, status, tname, s1.city as from_city, s2.city as to_city "
-				+ "from `order` as o,`train` as t, `stop` as s1 , `stop` as s2 "
-				+ "where uid = ? and t.tid = o.tid and t.tid = s1.tid and o.start_sid = s1.sid and t.tid = s2.tid and o.end_sid = s2.sid ";
+	public ArrayList<Order> getOrderByIdcard(String idcard) {
+		String SQL = "select * from `12307`.order where idcard = ?";
 		RowMapper<Order> rowMapper = new BeanPropertyRowMapper<>(Order.class);
-		ArrayList<Order> orderList = (ArrayList<Order>) jdbcTemplateObject.query(SQL, rowMapper, uid);
+		ArrayList<Order> orderList = (ArrayList<Order>) jdbcTemplateObject.query(SQL, rowMapper, idcard);
 		return orderList;
 	}
-
-	@Override
-	public HashMap<String, String> lockSeat(String tid, String date, String ctype, String nextTo, int fromIndex, int toIndex) {
-		String SQL = "select c1.cid, s.location " + "from `12307`.seat as s, `12307`.carriage as c1 "
-				+ "where c1.ctype = ? and s.next_to = ? and (c1.cid, s.location) not in ( " + "select c2.cid,o.location "
-				+ "from `12307`.order as o, `12307`.carriage as c2 "
-				+ "where o.tid = ? and c2.ctype = ? and o.date = ? and c2.cid = o.cid and ((o.start_sid <= ? and o.end_sid <= ?) or (o.start_sid >= ? and o.end_sid >= ?))) ";
-
-		RowMapper<Order> rowMapper = new BeanPropertyRowMapper<>(Order.class);
-		ArrayList<Order> orderList = (ArrayList<Order>) jdbcTemplateObject.query(SQL, rowMapper, ctype, nextTo, tid, ctype,
-				date, fromIndex, toIndex, fromIndex, toIndex);
-		
-		if(orderList.isEmpty()) {
-			SQL = "select c1.cid, s.location " + "from `12307`.seat as s, `12307`.carriage as c1 "
-					+ "where c1.ctype = ? and (c1.cid, s.location) not in ( " + "select c2.cid,o.location "
-					+ "from `12307`.order as o, `12307`.carriage as c2 "
-					+ "where o.tid = ? and c2.ctype = ? and o.date = ? and c2.cid = o.cid and ((o.start_sid <= ? and o.end_sid <= ?) or (o.start_sid >= ? and o.end_sid >= ?))) ";
-
-			rowMapper = new BeanPropertyRowMapper<>(Order.class);
-			orderList = (ArrayList<Order>) jdbcTemplateObject.query(SQL, rowMapper, ctype, tid, ctype,
-					date, fromIndex, toIndex, fromIndex, toIndex);
-		}
-		
-		HashMap<String, String> output = new HashMap<String, String>();
-		output.put("cid", orderList.get(0).getCid());
-		output.put("location", orderList.get(0).getLocation());
-		return output;
-	}
-
 }

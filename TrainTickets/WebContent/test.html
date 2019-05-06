@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Send AJAX</title>
+<style>
+    #url {
+        margin: 3vw;
+        width: 50vw;
+        height: 5vh;
+    }
+
+    #content {
+        margin: 3vw;
+        width: 50vw;
+        height: 5vh;
+    }
+</style>
+<script src="http://localhost:8080/TrainTickets/jQuery-3.3.1.js"></script>
+</head>
+<body>
+<div>接口测试</div><br>
+<div>输入url</div><br>
+<input id="url" value="http://localhost:8080/TrainTickets/"><br>
+<div>输入post请求体（以javascript对象的格式输入）</div><br>
+<input id="content" value="{}"><br>
+<button id="send">send</button><br>
+<span id="status"></span><br>
+<script>
+  $("#send").click(function(){
+    var url = $("#url").val();
+    var content = $("#content").val();
+    var jsonObject = JSON.parse(content);
+    $("#status").text("requesting");
+    $.post(
+      url,
+      jsonObject,
+      function(data){
+    	  $("#status").text(JSON.stringify(data));
+    });
+  });
+</script>
+</body>
+</html>
