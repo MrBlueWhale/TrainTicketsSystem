@@ -41,6 +41,6 @@ train-tickets-front-end为前端工程文件。<br>
 向localhost:8080/TrainTickets/xxx (xxx为对应的接口)发起post请求就可以了。<br>
 <br>
 前端的部署需要安装node.js<br>
-之后进入train-tickets-front-end文件夹，输入npm run start<br>
+之后进入train-tickets-front-end文件夹，输入npm install, 然后输入npm run start<br>
 访问localhost:3000即可。<br>
 打包文件可以输入npm run build<br>
